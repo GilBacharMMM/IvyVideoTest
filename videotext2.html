@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Stream</title>
+    <style>
+    #video-container {
+        position: relative;
+        width: 100%;
+    }
+    video
+    {
+        width: 100%;
+    }
+    #save-button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+    #rec-indicator {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: red;
+        font-weight: bold;
+        font-size: 24px;
+        z-index: 2;
+    }
+    #overlay-circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-color: rgba(169, 169, 169, 0.3);
+        z-index: 1;
+    }
+    </style>
+</head>
+
+<body>
+<div id="video-container">
+    <video id="video" autoplay></video>
+    <button id="save-button">Save</button>
+    <div id="rec-indicator"></div>
+    <div id="overlay-circle"></div>
+</div>
+<script>
+    const video = document.getElementById('video');
+    const saveButton = document.getElementById('save-button');
+    const recIndicator = document.getElementById('rec-indicator');
+    const overlayCircle = document.getElementById('overlay-circle');
+    let mediaRecorder;
+    let chunks = [];
+
+    // Get access to the camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+            mediaRecorder = new MediaRecorder(stream);
+
+            // Start recording when save button is clicked
+            saveButton.addEventListener('click', () => {
+                if (mediaRecorder.state === 'inactive') {
+                    mediaRecorder.start();
+                    recIndicator.innerText = 'REC';
+                } else {
+                    mediaRecorder.stop();
+                    recIndicator.innerText = '';
+                }
+            });
+
+            // Save recorded chunks to a file
+            mediaRecorder.ondataavailable = e => {
+                chunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/mp4' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'mov.mp4';
+                document.body.appendChild(a);
+                a.click();
+                chunks = [];
+                URL.revokeObjectURL(url);
+            };
+        })
+        .catch(err => console.error('Error accessing camera:', err));
+
+</script>
+</body>
+</html>
