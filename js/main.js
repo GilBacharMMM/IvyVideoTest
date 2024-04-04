@@ -4,8 +4,8 @@
 // Spec is at http://dvcs.w3.org/hg/dap/raw-file/tip/media-stream-capture/RecordingProposal.html
 
 //var constraints = {audio:true,video:{width:{min:640,ideal:640,max:640 },height:{ min:480,ideal:480,max:480},framerate:30}};
-//var constraints = {audio:false,video:{width:{min:1920,ideal:1920,max:1920 },height:{ min:1080,ideal:1080,max:1080},framerate:30}};
-var constraints = {audio:false,video:{width:{min:1280,ideal:1280,max:1280 },height:{ min:720,ideal:720,max:720},framerate:30}};
+var constraints = {audio:false,video:{width:{min:1920,ideal:1920,max:1920 },height:{ min:1080,ideal:1080,max:1080},framerate:30}};
+//var constraints = {audio:false,video:{width:{min:1280,ideal:1280,max:1280 },height:{ min:720,ideal:720,max:720},framerate:30}};
 
 var recBtn = document.querySelector('button#rec');
 var pauseResBtn = document.querySelector('button#pauseRes');
